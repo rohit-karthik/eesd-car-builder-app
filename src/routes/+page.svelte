@@ -1,4 +1,5 @@
 <script>
+    import { get } from "svelte/store";
     import BodyStylePage from "../components/BodyStylePage.svelte";
     import DriveTrainsPage from "../components/DriveTrainsPage.svelte";
     import OtherCarFeatures from "../components/OtherCarFeatures.svelte";
@@ -41,7 +42,19 @@
     $: getTotalCost = () => {
         return selectedDriveTrainCost + getRefuelCost() + selectedBodyStyleCost + selectedFeaturesCost;
     }
-    
+
+    $: getLongtermCost = () => {
+        if (selectedDriveTrainValue == "Gasoline" || 
+            selectedDriveTrainValue == "Diesel" || 
+            selectedDriveTrainValue == "Synthetic Fuel" 
+        ) {
+            return 3500;
+        } else if (selectedDriveTrainValue == "Electric") {
+            return 750;
+        } else {
+            return 6000;
+        }
+    }
 </script>
 
 <div class="p-24 pt-10">
@@ -63,9 +76,9 @@
                     type, fueling/charging technology, and body style.
                 </li>
                 <li>
-                    You can also pick color choices that your consumers can choose
-                    from, and the technology and comfort features that your car
-                    will offer.
+                    You can also pick color choices that your consumers can
+                    choose from, and the technology and comfort features that
+                    your car will offer.
                 </li>
                 <li>
                     The goal of this simulator is to build a car that is as
@@ -82,7 +95,18 @@
             <p class="text-xl">Refill Technology Cost: ${getRefuelCost()}</p>
             <p class="text-xl">Body Style Cost: ${selectedBodyStyleCost}</p>
             <p class="text-xl">Other Features Cost: ${selectedFeaturesCost}</p>
-            <p class="text-xl font-bold">Total Vehicle Cost: ${getTotalCost()}</p>
+            <p class="text-xl font-bold">
+                Total Vehicle Cost: ${getTotalCost()}
+            </p>
+            <div class="p-1" />
+            <p class="text-xl">5-Year Projected Fuel Cost: ${getLongtermCost()}</p>
+            <p class="text-xl font-bold">Total Customer Cost over 5-Years: ${getLongtermCost() + getTotalCost()}</p>
+            <p>
+                The above shows the fueling cost over 5 years with the current average electricity and fueling prices in Washington state.
+                Customers will be able to save money on fueling costs if they choose a car with a lower fueling cost,
+                and lower fueling costs makes your car more attractive to customers.
+            </p>
+            <div class="p-2" />
             <div class="flex flex-col gap-5 lg:flex-row">
                 <DriveTrainsPage />
                 <RefuelPage />
